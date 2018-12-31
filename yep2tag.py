@@ -14,7 +14,11 @@ it's days are numbered (Yep 1.8.0 released ~2008).
 This script future-proofs all the metadata I've got stored in Yep and makes Yep files
 play well with the Finder & Spotlight
 
+I run the script with following options:
+./yep2tag.py --lctags --overwritetags -q --addtag=yep
+
 """
+
 import gzip
 from pathlib import Path
 from plistlib import load
@@ -25,16 +29,12 @@ from collections import Counter
 import osxmetadata
 from tqdm import tqdm
 
-# TODO: option to add a tag (e.g. yep) on all files (and option to also tag files that don't have tags in yep)
 # TODO: option to normalize tags (all lowercase, Mixed Case, etc)
-# TODO: option to update or replace tags
-# TODO: list tags
-# TODO: test
 # TODO: ignore tag
-# TODO: replace instead of update
 
 # path to default Yep plist file
 _yepplist = str(Path.home()) + "/Library/Application Support/Yep/docInfo.plist.gz"
+DEBUG = False
 
 # custom argparse class to show help if error triggered
 class MyParser(argparse.ArgumentParser):
@@ -64,7 +64,7 @@ def process_arguments():
         action="store_true",
         default=False,
         help="list files to be updated but do not actually udpate meta data, "
-            + "most useful with --verbose",
+        + "most useful with --verbose",
     )
     parser.add_argument(
         "-h",
@@ -85,7 +85,7 @@ def process_arguments():
         action="store_true",
         default=False,
         help="Overwrite tags when exporting metadata; default is to merge tags, "
-            +"Finder comments are always overwritten with yep comments",
+        + "Finder comments are always overwritten with yep comments",
     )
     parser.add_argument(
         "-q",
@@ -106,6 +106,23 @@ def process_arguments():
         default=False,
         help="List all tags found in Yep; does not update any files",
     )
+    parser.add_argument(
+        "--addtag",
+        action="append",
+        help="Add additional tag(s) to every Yep document: e.g. --addtag=yep --addtag=foo",
+    )
+    parser.add_argument(
+        "--lctags",
+        action="store_true",
+        default=False,
+        help="Convert all tags to lowercase before exporting metadata",
+    )
+    parser.add_argument(
+        "--clearall",
+        action="store_true",
+        default=False,
+        help="Clears all metadata from Yep documents (tags/keywords and Finder comments)",
+    )
 
     args = parser.parse_args()
     # if no args, show help and exit
@@ -114,6 +131,7 @@ def process_arguments():
         sys.exit(1)
 
     return args
+
 
 def main():
     global _yepplist
@@ -135,14 +153,14 @@ def main():
 
     if args.list:
         tags = []
-        for item in pl['KPDocsInDB']:
+        for item in pl["KPDocsInDB"]:
             if "Keywords" in item:
                 tags += item["Keywords"]
         tagcount = Counter(tags)
         for tag in tagcount.most_common():
             print(f"{tag[0]}, {tag[1]}")
     else:
-        for item in tqdm(iterable=pl['KPDocsInDB'], disable=args.noprogress):
+        for item in tqdm(iterable=pl["KPDocsInDB"], disable=args.noprogress):
             fname = item["currentPath"]
             yep_tags = []
             yep_comment = None
@@ -155,26 +173,47 @@ def main():
 
             if not os.path.isfile(fname):
                 if not args.quiet:
-                    tqdm.write("Skipping: %s, does not appear to be a valid file name" % fname)
+                    tqdm.write(
+                        "Skipping: %s, does not appear to be a valid file name" % fname
+                    )
                 items_skipped += 1
                 continue
 
             try:
                 md = osxmetadata.OSXMetaData(fname)
+                if args.clearall:
+                    if DEBUG:
+                        print(f"wiping metadata from {fname}")
+                    md.tags.clear()
+                    md.finder_comment = ""
+                    continue
                 if args.verbose:
                     tqdm.write(f"Processing: {fname}")
+                if args.lctags:
+                    if DEBUG:
+                        print(f"lctags: {yep_tags}")
+                    yep_tags = [x.lower() for x in yep_tags]
+                    if DEBUG:
+                        print(f"lctags: {yep_tags}")
+                if args.addtag:
+                    yep_tags += args.addtag
                 if yep_tags:
-                    yep_tags.append("yep")
                     if args.verbose:
                         tqdm.write("yep_tags: %s" % ", ".join(yep_tags))
                     if not args.test:
                         if args.overwritetags:
+                            if DEBUG:
+                                print("clear()")
                             md.tags.clear()
+                        if DEBUG:
+                            print(f"update({yep_tags})")
                         md.tags.update(*yep_tags)
                 if yep_comment:
                     if args.verbose:
                         tqdm.write("yep_comment: %s" % yep_comment)
-                    if not args.test:    
+                    if not args.test:
+                        if DEBUG:
+                            print(f"finder_comment: {yep_comment}")
                         md.finder_comment = yep_comment
                 items_processed += 1
             except (IOError, OSError) as e:
@@ -184,6 +223,7 @@ def main():
             "Processed %d of %d files, skipped %d"
             % (items_processed, total_items, items_skipped)
         )
+
 
 if __name__ == "__main__":
     main()

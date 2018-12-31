@@ -14,6 +14,10 @@ it's days are numbered (Yep 1.8.0 released ~2008).
 This script future-proofs all the metadata I've got stored in Yep and makes Yep files
 play well with the Finder & Spotlight
 
+I run the script with following options:
+
+`./yep2tag.py --lctags --overwritetags -q --addtag=yep`
+
 Dependencies
 ------------
 
