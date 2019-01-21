@@ -8,7 +8,7 @@ Tested with Yep version 1.8.0 See: http://www.ironicsoftware.com
 Yep versions 1.x store metadata in a plist file.  This script reads the file and
 exports the metadata to OX X tags (Yep tags) and Finder comments (Yep description),
 
-Newer versions of Yep already store metadata using OS X extended attributes but 
+Newer versions of Yep already store metadata using OS X extended attributes but
 I much preferred the interface of the "legacy" Yep app which aimed to be "iPhotos 
 for PDFs."  If you use Yep 2.x+, you don't need this script.
 
@@ -48,10 +48,7 @@ class MyParser(argparse.ArgumentParser):
 
 
 def onError(e):
-    if not os.path.exists(fname):
-        sys.stderr.write("No such file: %s\n" % (fname,))
-    else:
-        sys.stderr.write(str(e) + "\n")
+    sys.stderr.write(str(e) + "\n")
 
 
 def process_arguments():
