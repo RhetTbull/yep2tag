@@ -123,6 +123,13 @@ def process_arguments():
         default=False,
         help="Clears all metadata from Yep documents (tags/keywords and Finder comments)",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        default=False,
+        help="forces tags, comments to be written even if existing tags, comments match \
+        what will be written. Default is false",
+    )
 
     args = parser.parse_args()
     # if no args, show help and exit
@@ -202,21 +209,36 @@ def main():
                 if yep_tags:
                     if args.verbose:
                         tqdm.write("yep_tags: %s" % ", ".join(yep_tags))
+                    # flag if tags to be written different than what's already on disk
+                    # or force arg is set
+                    tags_different = sorted(yep_tags) != sorted(md.tags) or args.force
                     if not args.test:
-                        if args.overwritetags:
+                        if args.overwritetags and tags_different:
                             if DEBUG:
                                 print("clear()")
                             md.tags.clear()
                         if DEBUG:
                             print(f"update({yep_tags})")
-                        md.tags.update(*yep_tags)
+
+                        # only update if tags to be updated are different than
+                        # what's already there
+                        if tags_different:
+                            if DEBUG:
+                                print("yep_tags: ", sorted(yep_tags))
+                                print("md.tags: ", sorted(md.tags))
+                                print(f"update({yep_tags}, {args.force}")
+                            md.tags.update(*yep_tags)
+                        else:
+                            if DEBUG:
+                                print(f"nothing to update {yep_tags}, {args.force}")
                 if yep_comment:
                     if args.verbose:
                         tqdm.write("yep_comment: %s" % yep_comment)
                     if not args.test:
                         if DEBUG:
                             print(f"finder_comment: {yep_comment}")
-                        md.finder_comment = yep_comment
+                        if md.finder_comment != yep_comment or args.force:
+                            md.finder_comment = yep_comment
                 items_processed += 1
             except (IOError, OSError) as e:
                 quit(onError(e))
