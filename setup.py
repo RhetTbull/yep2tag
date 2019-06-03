@@ -37,7 +37,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="yep2tag",
-    version="0.83",
+    version="0.84",
     description="Exports tags/keywords and comments managed by Ironic Software's Yep application to native OS X tags & Finder comments",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -46,7 +46,7 @@ setup(
     url="https://github.com/RhetTbull/",
     project_urls={"GitHub": "https://github.com/RhetTbull/yep2tag"},
     download_url="https://github.com/RhetTbull/yep2tag",
-    packages=["yep2tag","yep2tag.__main__"],
+    packages=["yep2tag",],
     license="License :: OSI Approved :: MIT License",
     classifiers=[
         "Development Status :: 4 - Beta",
