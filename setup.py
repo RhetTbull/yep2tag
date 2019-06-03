@@ -56,6 +56,6 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Programming Language :: Python",
     ],
-    install_requires=["osxmetadata", "pyobjc"],
+    install_requires=["osxmetadata", "tqdm", "pyobjc"],
     entry_points={"console_scripts": ["yep2tag=yep2tag.__main__:main"]},
 )
