@@ -20,7 +20,14 @@ play well with the Finder & Spotlight.
 
 I run the script with following options:
 
-`./yep2tag.py --lctags --overwritetags -q --addtag=yep`
+`yep2tag --lctags --overwritetags -q --addtag=yep`
+
+Installation
+------------
+
+I recommend using [pipx](https://github.com/pipxproject/pipx)
+
+`pipx install --spec git+https://github.com/RhetTbull/yep2tag yep2tag`
 
 Dependencies
 ------------
