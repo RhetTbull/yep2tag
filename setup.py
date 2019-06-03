@@ -26,7 +26,6 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# from distutils.core import setup
 from setuptools import setup
 
 # read the contents of README file
@@ -47,7 +46,7 @@ setup(
     url="https://github.com/RhetTbull/",
     project_urls={"GitHub": "https://github.com/RhetTbull/yep2tag"},
     download_url="https://github.com/RhetTbull/yep2tag",
-    packages=["yep2tag"],
+    packages=["yep2tag","yep2tag.__main__"],
     license="License :: OSI Approved :: MIT License",
     classifiers=[
         "Development Status :: 4 - Beta",
