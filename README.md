@@ -27,7 +27,7 @@ Installation
 
 I recommend using [pipx](https://github.com/pipxproject/pipx)
 
-`pipx install --spec git+https://github.com/RhetTbull/yep2tag yep2tag`
+`pipx install --spec git+https://github.com/RhetTbull/yep2tag.git yep2tag`
 
 Dependencies
 ------------
