@@ -1,1 +1,1 @@
-# nothing here, all code in cmd_line.py
+# nothing here, all code in __main__.py
