@@ -46,7 +46,7 @@ setup(
     url="https://github.com/RhetTbull/",
     project_urls={"GitHub": "https://github.com/RhetTbull/yep2tag"},
     download_url="https://github.com/RhetTbull/yep2tag",
-    packages=["yep2tag",],
+    packages=["yep2tag"],
     license="License :: OSI Approved :: MIT License",
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -55,6 +55,6 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Programming Language :: Python",
     ],
-    install_requires=["osxmetadata", "tqdm",],
+    install_requires=["osxmetadata>=0.98.0", "tqdm"],
     entry_points={"console_scripts": ["yep2tag=yep2tag.__main__:main"]},
 )

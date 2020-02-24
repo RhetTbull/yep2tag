@@ -194,7 +194,7 @@ def main():
                     if DEBUG:
                         print(f"wiping metadata from {fname}")
                     md.tags.clear()
-                    md.finder_comment = ""
+                    md.findercomment = ""
                     continue
                 if args.verbose:
                     tqdm.write(f"Processing: {fname}")
@@ -236,9 +236,9 @@ def main():
                         tqdm.write("yep_comment: %s" % yep_comment)
                     if not args.test:
                         if DEBUG:
-                            print(f"finder_comment: {yep_comment}")
-                        if md.finder_comment != yep_comment or args.force:
-                            md.finder_comment = yep_comment
+                            print(f"findercomment: {yep_comment}")
+                        if md.findercomment != yep_comment or args.force:
+                            md.findercomment = yep_comment
                 items_processed += 1
             except (IOError, OSError) as e:
                 quit(onError(e))
