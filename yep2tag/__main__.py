@@ -226,8 +226,10 @@ def main():
                             if DEBUG:
                                 print("yep_tags: ", sorted(yep_tags))
                                 print("md.tags: ", sorted(md.tags))
-                                print(f"update({yep_tags}, {args.force}")
-                            md.tags.update(*yep_tags)
+                                print(f"update: {yep_tags}, {args.force}")
+                            for tag in yep_tags:
+                                if tag not in md.tags:
+                                    md.tags.append(tag)
                         else:
                             if DEBUG:
                                 print(f"nothing to update {yep_tags}, {args.force}")

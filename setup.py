@@ -37,7 +37,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="yep2tag",
-    version="0.84",
+    version="0.85",
     description="Exports tags/keywords and comments managed by Ironic Software's Yep application to native OS X tags & Finder comments",
     long_description=long_description,
     long_description_content_type="text/markdown",
