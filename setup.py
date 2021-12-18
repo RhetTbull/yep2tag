@@ -37,7 +37,7 @@ with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="yep2tag",
-    version="0.86",
+    version="0.90",
     description="Exports tags/keywords and comments managed by Ironic Software's Yep application to native OS X tags & Finder comments",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -55,6 +55,6 @@ setup(
         "Operating System :: MacOS :: MacOS X",
         "Programming Language :: Python",
     ],
-    install_requires=["osxmetadata>=0.98.0", "tqdm"],
+    install_requires=["osxmetadata>=0.99.37", "tqdm"],
     entry_points={"console_scripts": ["yep2tag=yep2tag.__main__:main"]},
 )

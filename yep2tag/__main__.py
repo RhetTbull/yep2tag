@@ -23,14 +23,16 @@ I run the script with following options:
 
 """
 
+import argparse
 import gzip
-from pathlib import Path
-from plistlib import load
 import os.path
 import sys
-import argparse
 from collections import Counter
+from pathlib import Path
+from plistlib import load
+
 import osxmetadata
+from osxmetadata import Tag
 from tqdm import tqdm
 
 # TODO: ignore tag
@@ -57,7 +59,7 @@ def process_arguments():
         add_help=False,
     )
     parser.add_argument(
-        "--plist", help=f"path to Yep plist file, will default to{_yepplist}"
+        "--plist", help=f"path to Yep plist file, will default to {_yepplist}"
     )
     parser.add_argument(
         "--test",
@@ -211,7 +213,7 @@ def main():
                         tqdm.write("yep_tags: %s" % ", ".join(yep_tags))
                     # flag if tags to be written different than what's already on disk
                     # or force arg is set
-                    tags_different = sorted(yep_tags) != sorted(md.tags) or args.force
+                    tags_different = sorted(yep_tags) != sorted([t.name for t in md.tags]) or args.force
                     if not args.test:
                         if args.overwritetags and tags_different:
                             if DEBUG:
@@ -225,11 +227,11 @@ def main():
                         if tags_different:
                             if DEBUG:
                                 print("yep_tags: ", sorted(yep_tags))
-                                print("md.tags: ", sorted(md.tags))
+                                print("md.tags: ", sorted([t.name for t in md.tags]))
                                 print(f"update: {yep_tags}, {args.force}")
                             for tag in yep_tags:
-                                if tag not in md.tags:
-                                    md.tags.append(tag)
+                                if tag not in [t.name for t in md.tags]:
+                                    md.tags.append(Tag(tag))
                         else:
                             if DEBUG:
                                 print(f"nothing to update {yep_tags}, {args.force}")
@@ -239,8 +241,7 @@ def main():
                     if not args.test:
                         if DEBUG:
                             print(f"findercomment: {yep_comment}")
-                        if md.findercomment != yep_comment or args.force:
-                            md.findercomment = yep_comment
+                        md.findercomment = yep_comment
                 items_processed += 1
             except (IOError, OSError) as e:
                 quit(onError(e))
